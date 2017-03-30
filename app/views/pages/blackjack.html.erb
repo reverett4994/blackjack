@@ -1,0 +1,101 @@
+<%=session[:used_cards]%>
+<div class="btn_div">
+  <button id="start" data-label="START">STARt</button>
+</div>
+
+<button id="restart">Restart</button>
+<button id="hit"disabled>hit</button>
+<div id="player-cards"></div>
+<div id="player-number"></div>
+<div id="dealer-cards"></div>
+
+<script>
+function playerBust(playerNumber) {
+    if(playerNumber>21){
+      alert("Your Over 21!");
+      return false
+    }
+}
+$("#start").click(function(){
+  $("#hit").removeAttr('disabled')
+  $("#start").addClass("loading")
+  $("#start").attr('disabled','disabled')
+  var pCard1=null
+  var pCard2=null
+  // *********************************GET PLAYER CARDS****************************************
+  $.ajax({
+    type: "GET",
+    url: "/deal",
+    async: false,
+    dataType:"json",
+    success:function(data) {
+      console.log(data);
+      pCard1=data[0]
+      pCard2=data[1]
+      return false;
+    },
+    error:function(data) {
+      console.log(data);
+      return false;
+    }
+  });
+  // *********************************SHOW PLAYER CARDS****************************************
+  if (pCard1.id.toString().length==2) {
+    $("<img>", { src: "/system/cards/pictures/000/000/0"+pCard1.id+"/original/"+pCard1.picture_file_name }).prependTo("#player-cards");
+  } else {
+    // $("#player-cards").prepend("<img src='/system/cards/pictures/000/000/0'"+pCard1.id+"'/original/'"+pCard1.picture_file_name+"'> ");
+    $("<img>", { src: "/system/cards/pictures/000/000/"+pCard1.id+"/original/"+pCard1.picture_file_name }).prependTo("#player-cards");
+  }
+  if (pCard2.id.toString().length==1) {
+    $("<img>", { src: "/system/cards/pictures/000/000/00"+pCard2.id+"/original/"+pCard2.picture_file_name }).prependTo("#player-cards");
+  } else {
+    // $("#player-cards").prepend("<img src='/system/cards/pictures/000/000/0'"+pCard1.id+"'/original/'"+pCard1.picture_file_name+"'> ");
+    $("<img>", { src: "/system/cards/pictures/000/000/0"+pCard2.id+"/original/"+pCard2.picture_file_name }).prependTo("#player-cards");
+  }
+  // *********************************SHOW PLAYER CARDS VALUE****************************************
+   $("#player-number").prepend(pCard1.value+pCard2.value);
+
+});
+// *********************************HIT****************************************
+
+$("#hit").click(function(){
+  var pCard=null
+  // *********************************GET PLAYER CARD****************************************
+  $.ajax({
+    type: "GET",
+    url: "/hit",
+    async: false,
+    dataType:"json",
+    success:function(data) {
+      console.log(data);
+      pCard=data[0]
+      return false;
+    },
+    error:function(data) {
+      console.log(data);
+      return false;
+    }
+  });
+  // *********************************SHOW PLAYER CARDS****************************************
+  if (pCard.id.toString().length==2) {
+    $("<img>", { src: "/system/cards/pictures/000/000/0"+pCard.id+"/original/"+pCard.picture_file_name }).prependTo("#player-cards");
+  } else {
+    // $("#player-cards").prepend("<img src='/system/cards/pictures/000/000/0'"+pCard1.id+"'/original/'"+pCard1.picture_file_name+"'> ");
+    $("<img>", { src: "/system/cards/pictures/000/000/"+pCard.id+"/original/"+pCard.picture_file_name }).prependTo("#player-cards");
+  }
+  // *********************************SHOW PLAYER CARDS VALUE****************************************
+   var playerNumber=parseInt($("#player-number").text())
+   $('#player-number').empty();
+   $("#player-number").prepend(playerNumber+pCard.value);
+   playerBust(parseInt($("#player-number").text()))
+});
+
+// *********************************RESTART****************************************
+$("#restart").click(function(){
+  $("#start").removeClass("loading")
+  $("#start").removeAttr('disabled')
+  $("#hit").attr('disabled', true)
+  $('#player-cards').empty();
+  $('#player-number').empty();
+});
+</script>
