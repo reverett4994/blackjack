@@ -65,7 +65,7 @@ class CardsController < ApplicationController
   def deal
     session[:used_cards]=[]
     @cards = Card.all
-    @p_cards=@cards.sample(2)
+    @p_cards=@cards.sample(3)
     @p_cards.each do |c|
       session[:used_cards].push(c.id)
     end
@@ -77,10 +77,18 @@ class CardsController < ApplicationController
   end
 
   def hit
-    @cards = Card.all
-    session[:used_cards].each do |card|
-      @cards.pop(card)
+    @cards = Card.where.not(id:session[:used_cards])
+    @p_cards=@cards.sample(1)
+    session[:used_cards].push(@p_cards.last.id)
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @p_cards }
+      format.json { render :json => @p_cards }
     end
+  end
+
+  def dealer
+    @cards = Card.where.not(id:session[:used_cards])
     @p_cards=@cards.sample(1)
     session[:used_cards].push(@p_cards.last.id)
     respond_to do |format|

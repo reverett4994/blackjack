@@ -13,6 +13,57 @@
  *= require_tree .
  *= require_self
  */
+#player-cards{
+  width: 80%;
+  height: 220px;
+  border-radius: 0%;
+  border: 10px solid black;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 40px;
+  background-image: url("table.jpg");
+}
+#player-number{
+  font-size: 50px;
+  text-align: center;
+  margin: 50px;
+  font-family: 'Spirax', cursive;
+}
+#dealer-cards{
+  width: 80%;
+  height: 220px;
+  border-radius: 0%;
+  border: 10px solid black;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 40px;
+  background-image: url("table.jpg");
+}
+#dealer-number{
+  font-size: 50px;
+  text-align: center;
+  margin: 50px;
+  font-family: 'Spirax', cursive;
+}
 #player-cards img{
   width: 150px;
+  margin-right: 13px;
+}
+#dealer-cards img{
+  width: 150px;
+  margin-right: 13px;
+}
+#header{
+  font-size: 70px;
+  text-decoration: underline;
+}
+h1{
+  text-align: center;
+  font-family: 'Spirax', cursive;
+  font-size: 55px;
+}
+h2{
+  text-align: center;
+  font-family: 'Spirax', cursive;
+  font-size: 35px;
 }
