@@ -2,9 +2,11 @@
 <div class="btn_div">
   <button id="start" data-label="DEAL">STARt</button>
 </div>
-<button id="restart">Restart</button>
-<button id="hit"disabled>hit</button>
-<button id="stay"disabled>Stay</button>
+<div id="sub_buttons">
+  <button id="restart">Restart</button>
+  <button id="hit"disabled="disabled">hit</button>
+  <button id="stay"disabled="disabled">Stay</button>
+</div>
 <h1>Your Cards</h1>
 <div id="player-cards"></div>
 <h2>Your Hand Value</h2>
@@ -15,11 +17,42 @@
 <div id="dealer-number"></div>
 
 <script>
+window.onload = function() {
+  $( "#restart" ).trigger( "click" );
+};
+var pAces=0
+var dAces=0
 function playerBust(playerNumber) {
     if(playerNumber>21){
       alert("Your Over 21! You Lose.");
       $("#stay").attr('disabled', true)
+      $("#hit").attr('disabled',true)
       return false
+    }
+}
+function playerAces(playerNumber,aces) {
+  console.log(aces+" total aces");
+    if(playerNumber>21 && aces>0){
+      alert("GOT A ACE!");
+      var playerNumber=parseInt($("#player-number").text())
+      $('#player-number').empty();
+      $("#player-number").prepend(playerNumber-10);
+      pAces-=1
+      return false
+    }else{
+      playerBust(playerNumber)
+    }
+}
+function dealerAces(dealerNumber,aces) {
+  console.log(aces+" total aces");
+    if(dealerNumber>21 && aces>0){
+      var dealerNumber=parseInt($("#dealer-number").text())
+      $('#dealer-number').empty();
+      $("#dealer-number").prepend(dealerNumber-10);
+      dAces-=1
+      return false
+    }else{
+      alert("You Win!!!")
     }
 }
 $("#start").click(function(){
@@ -67,6 +100,16 @@ $("#start").click(function(){
     $("<img>", { src: "/system/cards/pictures/000/000/"+dCard.id+"/original/"+dCard.picture_file_name }).prependTo("#dealer-cards");
   }
   // *********************************SHOW PLAYER CARDS VALUE****************************************
+   if (pCard1.value==11){
+     pAces+=1;
+   }
+   if (pCard2.value==11){
+     pAces+=1;
+   }
+   if (dCard.value==11){
+     dAces+=1;
+   }
+   console.log(pAces+"deal");
    $("#player-number").prepend(pCard1.value+pCard2.value);
    $("#dealer-number").prepend(dCard.value);
 
@@ -74,6 +117,7 @@ $("#start").click(function(){
 // *********************************HIT****************************************
 
 $("#hit").click(function(){
+  console.log(pAces);
   var pCard=null
   // *********************************GET PLAYER CARD****************************************
   $.ajax({
@@ -102,7 +146,10 @@ $("#hit").click(function(){
    var playerNumber=parseInt($("#player-number").text())
    $('#player-number').empty();
    $("#player-number").prepend(playerNumber+pCard.value);
-   playerBust(parseInt($("#player-number").text()))
+   if (pCard.value==11){
+     pAces+=1;
+   }
+   playerAces(parseInt($("#player-number").text()),pAces)
 });
 
 // *********************************GET DEALER CARDS****************************************
@@ -139,11 +186,16 @@ $("#stay").click(function(){
     $('#dealer-number').empty();
     $("#dealer-number").prepend(playerNumber+pCard.value);
     var dealer_number=parseInt($("#dealer-number").text())
+    if (pCard.value==11){
+      dAces+=1;
+      $( "#stay" ).trigger( "click" );
+    };
   }
   if (parseInt($("#dealer-number").text()) >= parseInt($("#player-number").text()) && parseInt($("#dealer-number").text()) < 22 ){
     alert("Dealer Wins!")
+    $("#stay").attr('disabled', true)
   } else{
-    alert("You Win!")
+    dealerAces(parseInt($("#dealer-number").text()),dAces)
   }
 
 });
@@ -158,6 +210,8 @@ $("#restart").click(function(){
   $('#player-number').empty();
   $('#dealer-cards').empty();
   $('#dealer-number').empty();
+  pAces=0
+  dAces=0
 });
 
 </script>
