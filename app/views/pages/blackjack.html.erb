@@ -22,9 +22,24 @@ window.onload = function() {
 };
 var pAces=0
 var dAces=0
+
 function playerBust(playerNumber) {
     if(playerNumber>21){
-      alert("Your Over 21! You Lose.");
+      swal({
+        title: "You Bust!",
+        text: "You Have Over 21",
+        type: "warning",
+        confirmButtonColor: "#4da6ff",
+        confirmButtonText: "Try Again?",
+        allowEscapeKey:true,
+        closeOnConfirm: true,
+        closeOnCancel: true
+      },
+      function(isConfirm){
+        if (isConfirm) {
+          window.location.assign("/pages/blackjack")
+        }
+      });
       $("#stay").attr('disabled', true)
       $("#hit").attr('disabled',true)
       return false
@@ -33,7 +48,7 @@ function playerBust(playerNumber) {
 function playerAces(playerNumber,aces) {
   console.log(aces+" total aces");
     if(playerNumber>21 && aces>0){
-      alert("GOT A ACE!");
+      swal("You Got a Ace!", "Changing Value from 11 to 1")
       var playerNumber=parseInt($("#player-number").text())
       $('#player-number').empty();
       $("#player-number").prepend(playerNumber-10);
@@ -52,7 +67,21 @@ function dealerAces(dealerNumber,aces) {
       dAces-=1
       return false
     }else{
-      alert("You Win!!!")
+      swal({
+        title: "You Win!",
+        text: "Congratulations :D",
+        type: "success",
+        confirmButtonColor: "#4da6ff",
+        confirmButtonText: "Try Again?",
+        allowEscapeKey:true,
+        closeOnConfirm: true,
+        closeOnCancel: true
+      },
+      function(isConfirm){
+        if (isConfirm) {
+          window.location.assign("/pages/blackjack")
+        }
+      });
     }
 }
 $("#start").click(function(){
@@ -192,7 +221,21 @@ $("#stay").click(function(){
     };
   }
   if (parseInt($("#dealer-number").text()) >= parseInt($("#player-number").text()) && parseInt($("#dealer-number").text()) < 22 ){
-    alert("Dealer Wins!")
+    swal({
+      title: "Dealer Wins!",
+      text: "Better Luck Next Time",
+      type: "error",
+      confirmButtonColor: "#4da6ff",
+      confirmButtonText: "Try Again?",
+      allowEscapeKey:true,
+      closeOnConfirm: true,
+      closeOnCancel: true
+    },
+    function(isConfirm){
+      if (isConfirm) {
+        window.location.assign("/pages/blackjack")
+      }
+    });
     $("#stay").attr('disabled', true)
   } else{
     dealerAces(parseInt($("#dealer-number").text()),dAces)
