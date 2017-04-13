@@ -14,14 +14,28 @@
  *= require sweetalert
  *= require_self
  */
+ body{
+   text-align: center;
+
+ }
+ .player{
+   width: 50%;
+   display: inline-block;
+   float: left;
+ }
+ .dealer{
+   width: 50%;
+   display: inline-block;
+   float: right;
+ }
 #player-cards{
-  width: 80%;
+  width: 100%;
   height: 220px;
   border-radius: 0%;
   border: 10px solid black;
   margin-left: auto;
   margin-right: auto;
-  padding: 40px;
+  padding: 40px 0 40px 0;
   background-image: url("table.jpg");
 }
 #player-number{
@@ -31,13 +45,13 @@
   font-family: 'Spirax', cursive;
 }
 #dealer-cards{
-  width: 80%;
+  width: 98%;
   height: 220px;
   border-radius: 0%;
   border: 10px solid black;
   margin-left: auto;
   margin-right: auto;
-  padding: 40px;
+  padding: 40px 0 40px 0;
   background-image: url("table.jpg");
 }
 #dealer-number{
@@ -67,6 +81,28 @@ h2{
   text-align: center;
   font-family: 'Spirax', cursive;
   font-size: 35px;
+}
+#chip_header{
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+
+}
+#chips{
+  font-family: 'Spirax', cursive;
+  display: inline-block;
+  font-size: 35px;
+}
+#bet{
+  font-family: 'Spirax', cursive;
+  display: inline-block;
+  font-size: 35px;
+}
+#default_bet{
+  width: 60px;
+  font-family: 'Spirax', cursive;
+  font-size:24px;
 }
 #sub_buttons{
   width: 100%;

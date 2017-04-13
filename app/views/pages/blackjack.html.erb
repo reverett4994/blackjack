@@ -5,17 +5,29 @@
 <div id="sub_buttons">
   <button id="restart">Restart</button>
   <button id="hit"disabled="disabled">hit</button>
-  <button id="stay"disabled="disabled">Stay</button>
+  <button id="stay"disabled="disabled">Stay</button><br>
+  <h2 id="chip_header">Total Amount of Chips:&nbsp</h2>
+  <div id="chips">1000</div>
 </div>
-<h1>Your Cards</h1>
-<div id="player-cards"></div>
-<h2>Your Hand Value</h2>
-<div id="player-number"></div>
-<h1>Dealer Cards</h1>
-<div id="dealer-cards"></div>
-<h2>Dealer's Hand Value</h2>
-<div id="dealer-number"></div>
+<div class="player">
+  <h1>Your Cards</h1>
 
+  <div id="player-cards"></div>
+  <h2>Your Hand Value</h2>
+  <div id="player-number"></div>
+</div>
+
+<div class="dealer">
+  <h1>Dealer Cards</h1>
+  <div id="dealer-cards"></div>
+  <h2>Dealer's Hand Value</h2>
+  <div id="dealer-number"></div>
+</div>
+
+<h2 id="chip_header">Current Bet:&nbsp</h2>
+<div id="bet">0</div><br>
+<h2 id="chip_header">Default Bet:&nbsp</h2>
+<input type="text" name="default_bet" value="10" id=default_bet maxlength="4">
 <script>
 window.onload = function() {
   $( "#restart" ).trigger( "click" );
@@ -23,6 +35,12 @@ window.onload = function() {
 var pAces=0
 var dAces=0
 
+function extendTable() {
+  var count = $("#player-cards img").length;
+  if (count > 5){
+    $("#player-cards").animate({height: "400px"});
+  }
+}
 function playerBust(playerNumber) {
     if(playerNumber>21){
       swal({
@@ -37,7 +55,7 @@ function playerBust(playerNumber) {
       },
       function(isConfirm){
         if (isConfirm) {
-          window.location.assign("/pages/blackjack")
+          $( "#restart" ).trigger( "click" );
         }
       });
       $("#stay").attr('disabled', true)
@@ -67,6 +85,10 @@ function dealerAces(dealerNumber,aces) {
       dAces-=1
       return false
     }else{
+      var count = $("#dealer-cards img").length;
+      if (count > 5){
+        $("#dealer-cards").animate({height: "400px"});
+      }
       swal({
         title: "You Win!",
         text: "Congratulations :D",
@@ -79,7 +101,12 @@ function dealerAces(dealerNumber,aces) {
       },
       function(isConfirm){
         if (isConfirm) {
-          window.location.assign("/pages/blackjack")
+          // *********************************FINISH BET****************************************
+          var chips=(parseInt($("#chips").text()));
+          var bet=(parseInt($("#bet").text()));
+          $("#chips").text(chips+bet+bet)
+          $("#bet").text($("#default_bet").val())
+          $( "#restart" ).trigger( "click" );
         }
       });
     }
@@ -91,6 +118,10 @@ $("#start").click(function(){
   $("#start").attr('disabled','disabled')
   var pCard1=null
   var pCard2=null
+  // *********************************PLACE BET****************************************
+  var chips=(parseInt($("#chips").text()));
+  $("#chips").text(chips-$("#default_bet").val())
+  $("#bet").text($("#default_bet").val())
   // *********************************GET PLAYER CARDS****************************************
   $.ajax({
     type: "GET",
@@ -179,6 +210,7 @@ $("#hit").click(function(){
      pAces+=1;
    }
    playerAces(parseInt($("#player-number").text()),pAces)
+   extendTable()
 });
 
 // *********************************GET DEALER CARDS****************************************
@@ -221,6 +253,10 @@ $("#stay").click(function(){
     };
   }
   if (parseInt($("#dealer-number").text()) >= parseInt($("#player-number").text()) && parseInt($("#dealer-number").text()) < 22 ){
+      var count = $("#dealer-cards img").length;
+      if (count > 5){
+        $("#dealer-cards").animate({height: "400px"});
+      }
     swal({
       title: "Dealer Wins!",
       text: "Better Luck Next Time",
@@ -233,7 +269,7 @@ $("#stay").click(function(){
     },
     function(isConfirm){
       if (isConfirm) {
-        window.location.assign("/pages/blackjack")
+        $( "#restart" ).trigger( "click" );
       }
     });
     $("#stay").attr('disabled', true)
@@ -253,6 +289,13 @@ $("#restart").click(function(){
   $('#player-number').empty();
   $('#dealer-cards').empty();
   $('#dealer-number').empty();
+  $("#player-cards").animate({height: "220px"});
+  $("#dealer-cards").animate({height: "220px"});
+  // *********************************FINISH BET****************************************
+  var chips=(parseInt($("#chips").text()));
+  $("#chips").text(chips)
+
+
   pAces=0
   dAces=0
 });

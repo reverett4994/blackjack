@@ -51,5 +51,4 @@ gem "paperclip", "~> 5.0.0"
 
 gem 'sweetalert-rails'
 
-gem 'pg'
 gem 'rails_12factor', group: :production
